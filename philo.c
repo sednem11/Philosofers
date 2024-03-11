@@ -5,49 +5,65 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/06 13:18:47 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/07 16:34:39 by macampos         ###   ########.fr       */
+/*   Created: 2024/03/09 17:36:04 by macampos          #+#    #+#             */
+/*   Updated: 2024/03/09 17:36:44 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*thread_function(void *arg)
+t_philosopher	*free_philos(t_philosopher *philo)
 {
-	
-}
+	t_philosopher	*temp;
 
-t_philosopher	initiate_philos(t_table *table)
-{
-	t_philosopher	*philos;
-	t_philosopher	*philos;
-}
-
-void    initiate_values(t_table *table, int argc, char **argv)
-{
-	table->philosophers = ft_atoi(argv[1]);
-	table->time_to_die = ft_atoi(argv[2]);
-	table->time_to_eat = ft_atoi(argv[3]);
-	table->time_to_sleep = ft_atoi(argv[4]);
-	if(argc == 6)
-		table->meals = ft_atoi(argv[5]);
-	table->start_time = gettime();
-	table->forks = malloc(sizeof(pthread_mutex_t) * table->philosophers);
-	table->firstphilo = (table);
-}
-
-int main(int argc, char **argv)
-{
-	struct s_table	table;
-	int n;
-	int i;
-	
-	i = 0;
-	n = argv[1];
-	pthread_t	threads[n];
-	
-	if (argc == 5 || argc == 6)
+	while(temp != NULL)
 	{
-		initiate_values(&table, argc, argv);
+		temp = philo->next;
+		free(philo);
+		philo = temp;
 	}
+	return(NULL);
+}
+
+t_philosopher	*create_philo(t_table *table, int id)
+{
+	t_philosopher *philo;
+
+	philo = malloc(sizeof(t_philosopher));
+	philo->id = id;
+	philo->dead = 0;
+	philo->mealseaten = 0;
+	philo->table = table;
+	philo->next = NULL;
+	philo->myfork = &table->forks[id];
+	philo->leftfork = &table->forks[(id + 1) % table->philosophers];
+	return (philo);
+}
+
+t_philosopher	*initiate_philos(t_table *table)
+{
+	int				i;
+	t_philosopher	*philos;
+	t_philosopher	*philo;
+
+	i = 0;
+	philo = NULL;
+	philos = NULL;
+	while(i < table->philosophers)
+	{
+		if(philo)
+		{
+			philo->next = create_philo(table, i);
+			philo = philo->next;
+		}
+		else
+			philo = create_philo(table, i);
+		if (!philo)
+			return(free_philos(table));
+		if (!philos)
+			philos = philo;
+		philo->next = philos;
+		i++;
+	}
+	return(philos);
 }
