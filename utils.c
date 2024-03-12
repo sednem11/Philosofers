@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 18:42:40 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/06 18:54:12 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:45:16 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,13 @@ t_time  get_time()
     
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	_usleep(t_time time)
+{
+	t_time	start;
+
+	start = get_time();
+	while (get_time() - start < time)
+		usleep(10);
 }

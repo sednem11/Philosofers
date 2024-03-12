@@ -3,19 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 13:18:47 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/09 18:04:17 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/11 15:05:17 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	*thread_function(void *arg)
-{
-	
-}
 
 void    initiate_values(t_table *table, int argc, char **argv)
 {
@@ -58,5 +53,6 @@ int main(int argc, char **argv)
 	{
 		initiate_values(&table, argc, argv);
 		init_mutexes(&table);
+		routine_start(&table);
 	}
 }

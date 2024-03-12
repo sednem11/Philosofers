@@ -1,5 +1,5 @@
 #ifndef PHILO_H
-# define PHILO_h
+# define PHILO_H
 # include <stdio.h>
 # include <pthread.h>
 # include <stdlib.h>
@@ -36,5 +36,7 @@ typedef struct  s_philosopher
 }					t_philosopher;
 
 int		ft_atoi(const char *str);
+void	*philo_function(t_philosopher *philo);
+void	_usleep(t_time time)
 
 #endif
