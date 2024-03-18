@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   observer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 18:00:44 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/18 13:53:05 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:47:40 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*observe(t_table *table)
 		if (philo->mealseaten >= table->meals && table->meals != -1)
 		{
 			pthread_mutex_unlock(&table->write);
-			break;
+			break ;
 		}
 		if (get_time() - philo->last_meal > table->time_to_die)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   forks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 19:07:01 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/18 13:40:42 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:45:59 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	unlock_forks(pthread_mutex_t *myfork, pthread_mutex_t *leftfork)
 
 void	take_forks(t_philosopher *philo, int *dead)
 {
-	if(philo->id % 2 == 0)
+	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(philo->myfork);
 		print_status(philo, "has taken a fork", dead);
@@ -34,7 +34,7 @@ void	take_forks(t_philosopher *philo, int *dead)
 		pthread_mutex_lock(philo->leftfork);
 		print_status(philo, "has taken a fork", dead);
 		if (*dead)
-			unlock_forks(philo->myfork, philo->leftfork);		
+			unlock_forks(philo->myfork, philo->leftfork);
 		return ;
 	}
 	pthread_mutex_lock(philo->leftfork);

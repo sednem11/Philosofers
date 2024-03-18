@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 13:18:47 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/18 14:39:30 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:47:21 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ int	parse_args(int argc, char **argv)
 	return (0);
 }
 
-void    initiate_values(t_table *table, int argc, char **argv)
+void	initiate_values(t_table *table, int argc, char **argv)
 {
 	table->philosophers = ft_atoi(argv[1]);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
 	table->time_to_sleep = ft_atoi(argv[4]);
-	if(argc == 6)
+	if (argc == 6)
 		table->meals = ft_atoi(argv[5]);
 	else
 		table->meals = -1;
@@ -51,7 +51,7 @@ void	init_mutexes(t_table *table)
 	int		i;
 
 	i = 0;
-	while(i < table->philosophers)
+	while (i < table->philosophers)
 	{
 		pthread_mutex_init(&table->forks[i], NULL);
 		i++;
@@ -75,12 +75,12 @@ void	destroy_main(t_table *table)
 	pthread_mutex_destroy(&table->monitoring);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	struct s_table	table;
-	
+
 	if (parse_args(argc, argv))
-		return(1);
+		return (1);
 	initiate_values(&table, argc, argv);
 	init_mutexes(&table);
 	routine_start(&table);
@@ -88,5 +88,5 @@ int main(int argc, char **argv)
 	join_routines(&table);
 	free_philos(&table);
 	destroy_main(&table);
-	return(0);
+	return (0);
 }

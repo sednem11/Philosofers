@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:36:04 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/18 13:52:38 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:48:28 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_philosopher	*free_philos(t_table *table)
 {
 	t_philosopher	*philo;
 	t_philosopher	*tmp;
-	int		i;
+	int				i;
 
 	philo = table->firstphilo;
 	i = table->philosophers;
@@ -31,7 +31,7 @@ t_philosopher	*free_philos(t_table *table)
 
 t_philosopher	*create_philo(t_table *table, int id)
 {
-	t_philosopher *philo;
+	t_philosopher	*philo;
 
 	philo = malloc(sizeof(t_philosopher));
 	philo->id = id;
@@ -54,9 +54,9 @@ t_philosopher	*initiate_philos(t_table *table)
 	i = 0;
 	philo = NULL;
 	philos = NULL;
-	while(i < table->philosophers)
+	while (i < table->philosophers)
 	{
-		if(philo)
+		if (philo)
 		{
 			philo->next = create_philo(table, i);
 			philo = philo->next;
@@ -64,11 +64,11 @@ t_philosopher	*initiate_philos(t_table *table)
 		else
 			philo = create_philo(table, i);
 		if (!philo)
-			return(free_philos(table));
+			return (free_philos(table));
 		if (!philos)
 			philos = philo;
 		philo->next = philos;
 		i++;
 	}
-	return(philos);
+	return (philos);
 }

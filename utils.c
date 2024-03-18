@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 18:42:40 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/16 16:14:07 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:00:02 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ void	print_status(t_philosopher *philo, char *status, int *dead)
 	pthread_mutex_unlock(&philo->table->write);
 }
 
-t_time  get_time()
+t_time	get_time(void)
 {
-    struct timeval	tv;
-    
+	struct timeval	tv;
+
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }

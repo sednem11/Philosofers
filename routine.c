@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
+/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 14:33:12 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/18 13:43:17 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 14:58:45 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		eat(t_philosopher *philo, int *dead)
+int	eat(t_philosopher *philo, int *dead)
 {
 	take_forks(philo, dead);
 	if (*dead)
-		return(0);
+		return (0);
 	print_status(philo, "is eating", dead);
 	pthread_mutex_lock(&philo->table->write);
 	philo->last_meal = get_time();
@@ -24,13 +24,13 @@ int		eat(t_philosopher *philo, int *dead)
 	_usleep(philo->table->time_to_eat);
 	unlock_forks(philo->myfork, philo->leftfork);
 	philo->mealseaten++;
-	if((philo->table->meals != -1
-		&& philo->mealseaten >= philo->table->meals) || *dead)
+	if ((philo->table->meals != -1
+			&& philo->mealseaten >= philo->table->meals) || *dead)
 		return (0);
-	return(1);
+	return (1);
 }
 
-int is_dead(t_philosopher *philo)
+int	is_dead(t_philosopher *philo)
 {
 	pthread_mutex_lock(&philo->table->write);
 	if (philo->table->dead)
@@ -51,16 +51,16 @@ void	*philo_function(void *arg)
 	pthread_mutex_lock(&philo->table->monitoring);
 	pthread_mutex_unlock(&philo->table->monitoring);
 	dead = 0;
-	while(!philo->dead)
+	while (!philo->dead)
 	{
 		if (is_dead(philo))
-			break;
-		if(!eat(philo, &dead))
-			break;
+			break ;
+		if (!eat(philo, &dead))
+			break ;
 		print_status(philo, "is sleeping", &dead);
 		_usleep(philo->table->time_to_sleep);
-		if(is_dead(philo))
-			break;
+		if (is_dead(philo))
+			break ;
 		print_status(philo, "is thinking", &dead);
 	}
 	return (NULL);
@@ -68,39 +68,39 @@ void	*philo_function(void *arg)
 
 void	routine_start(t_table *table)
 {
-	t_philosopher   *philo;
+	t_philosopher	*philo;
 
 	philo = table->firstphilo;
-	while(philo)
+	while (philo)
 	{
-		if(philo->id % 2 == 0)
+		if (philo->id % 2 == 0)
 			pthread_create(&philo->thread, NULL, philo_function, philo);
 		philo = philo->next;
-		if(philo == table->firstphilo)
-			break;
+		if (philo == table->firstphilo)
+			break ;
 	}
 	philo = table->firstphilo->next;
-	while(philo)
+	while (philo)
 	{
 		if (philo->id % 2 == 1)
 			pthread_create(&philo->thread, NULL, philo_function, philo);
 		philo = philo->next;
 		if (philo == table->firstphilo)
-			break;
+			break ;
 	}
 }
 
 void	*join_routines(t_table *table)
 {
-	t_philosopher *philo;
+	t_philosopher	*philo;
 
 	philo = table->firstphilo;
-	while(philo)
+	while (philo)
 	{
 		pthread_join(philo->thread, NULL);
 		philo = philo->next;
-		if(philo == table->firstphilo)
-			break;
+		if (philo == table->firstphilo)
+			break ;
 	}
 	return (NULL);
 }
