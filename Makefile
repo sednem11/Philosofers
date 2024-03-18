@@ -3,20 +3,20 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: macampos <macampos@student.42.fr>          +#+  +:+       +#+         #
+#    By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/06 13:08:10 by macampos          #+#    #+#              #
-#    Updated: 2024/03/11 17:38:25 by macampos         ###   ########.fr        #
+#    Updated: 2024/03/16 19:55:22 by macampos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = PHILO
+NAME = philo
 
-SRC = philo.c main.c routine.c utils.c
+SRC = philo.c main.c routine.c utils.c observer.c forks.c
 
 OBJS = $(SRC:.c=.o)
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g #-fsanitize=address
 
 CC = cc
 
@@ -25,7 +25,8 @@ $(NAME): $(OBJS)
 
 all: $(NAME)
 
-clean: rm -rf $(OBJS)
+clean:
+		rm -rf $(OBJS)
 
 fclean: clean
 		rm -rf $(NAME)

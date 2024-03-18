@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 18:42:40 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/11 17:45:16 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/16 16:14:07 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,34 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (result * sign);
+}
+
+int	is_valid_number(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	print_status(t_philosopher *philo, char *status, int *dead)
+{
+	pthread_mutex_lock(&philo->table->write);
+	if (philo->table->dead)
+	{
+		pthread_mutex_unlock(&philo->table->write);
+		*dead = 1;
+		return ;
+	}
+	printf("%llu %d %s\n", get_time() - philo->table->start_time, philo->id + 1,
+		status);
+	pthread_mutex_unlock(&philo->table->write);
 }
 
 t_time  get_time()

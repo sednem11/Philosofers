@@ -3,72 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: macampos <macampos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 14:33:12 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/11 17:45:31 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 13:43:17 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	unlock_forks(pthread_mutex_t *myfork, pthread_mutex_t *leftfork)
-{
-	if (myfork)
-		pthread_mutex_unlock(myfork);
-	if (leftfork)
-		pthread_mutex_unlock(leftfork);
-}
-
-void	take_forks(t_philosopher *philo, int *dead)
-{
-	if(philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(philo->leftfork);
-		if (*dead || philo->table->philosophers == 1)
-		{
-			*dead = 1;
-			return (unlock_forks(NULL, philo->leftfork));
-		}
-		pthread_mutex_lock(philo->myfork);
-		if (*dead)
-			unlock_forks(philo->myfork, philo->leftfork);		
-		return ;
-	}
-	pthread_mutex_lock(philo->leftfork);
-	if (*dead)
-	{
-		*dead = 1;
-		return (unlock_forks(NULL, philo->leftfork));
-	}
-	pthread_mutex_lock(philo->myfork);
-	if (*dead)
-		unlock_forks(philo->myfork, philo->leftfork);
-}
-
 int		eat(t_philosopher *philo, int *dead)
 {
-	take_forks(philo, &dead);
+	take_forks(philo, dead);
 	if (*dead)
 		return(0);
+	print_status(philo, "is eating", dead);
+	pthread_mutex_lock(&philo->table->write);
+	philo->last_meal = get_time();
+	pthread_mutex_unlock(&philo->table->write);
 	_usleep(philo->table->time_to_eat);
-	
+	unlock_forks(philo->myfork, philo->leftfork);
+	philo->mealseaten++;
+	if((philo->table->meals != -1
+		&& philo->mealseaten >= philo->table->meals) || *dead)
+		return (0);
+	return(1);
 }
 
-void	*philo_function(t_philosopher *philo)
+int is_dead(t_philosopher *philo)
 {
-	int		dead;
+	pthread_mutex_lock(&philo->table->write);
+	if (philo->table->dead)
+	{
+		pthread_mutex_unlock(&philo->table->write);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->table->write);
+	return (0);
+}
 
+void	*philo_function(void *arg)
+{
+	int				dead;
+	t_philosopher	*philo;
+
+	philo = (t_philosopher *)arg;
+	pthread_mutex_lock(&philo->table->monitoring);
+	pthread_mutex_unlock(&philo->table->monitoring);
 	dead = 0;
 	while(!philo->dead)
 	{
-		if (philo->table->dead)
+		if (is_dead(philo))
 			break;
 		if(!eat(philo, &dead))
 			break;
+		print_status(philo, "is sleeping", &dead);
+		_usleep(philo->table->time_to_sleep);
+		if(is_dead(philo))
+			break;
+		print_status(philo, "is thinking", &dead);
 	}
+	return (NULL);
 }
-void    routine_start(t_table *table)
+
+void	routine_start(t_table *table)
 {
 	t_philosopher   *philo;
 
@@ -76,18 +74,33 @@ void    routine_start(t_table *table)
 	while(philo)
 	{
 		if(philo->id % 2 == 0)
-			pthread_create(philo->thread, NULL, philo_function, philo);
+			pthread_create(&philo->thread, NULL, philo_function, philo);
 		philo = philo->next;
 		if(philo == table->firstphilo)
-			break;   
+			break;
 	}
 	philo = table->firstphilo->next;
 	while(philo)
 	{
 		if (philo->id % 2 == 1)
-			pthread_create(philo->thread, NULL, philo_function, philo);
+			pthread_create(&philo->thread, NULL, philo_function, philo);
 		philo = philo->next;
 		if (philo == table->firstphilo)
 			break;
 	}
+}
+
+void	*join_routines(t_table *table)
+{
+	t_philosopher *philo;
+
+	philo = table->firstphilo;
+	while(philo)
+	{
+		pthread_join(philo->thread, NULL);
+		philo = philo->next;
+		if(philo == table->firstphilo)
+			break;
+	}
+	return (NULL);
 }

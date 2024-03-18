@@ -6,23 +6,27 @@
 /*   By: macampos <mcamposmendes@gmail.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:36:04 by macampos          #+#    #+#             */
-/*   Updated: 2024/03/09 17:36:44 by macampos         ###   ########.fr       */
+/*   Updated: 2024/03/18 13:52:38 by macampos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_philosopher	*free_philos(t_philosopher *philo)
+t_philosopher	*free_philos(t_table *table)
 {
-	t_philosopher	*temp;
+	t_philosopher	*philo;
+	t_philosopher	*tmp;
+	int		i;
 
-	while(temp != NULL)
+	philo = table->firstphilo;
+	i = table->philosophers;
+	while (i--)
 	{
-		temp = philo->next;
+		tmp = philo->next;
 		free(philo);
-		philo = temp;
+		philo = tmp;
 	}
-	return(NULL);
+	return (NULL);
 }
 
 t_philosopher	*create_philo(t_table *table, int id)
@@ -33,6 +37,7 @@ t_philosopher	*create_philo(t_table *table, int id)
 	philo->id = id;
 	philo->dead = 0;
 	philo->mealseaten = 0;
+	philo->last_meal = table->start_time;
 	philo->table = table;
 	philo->next = NULL;
 	philo->myfork = &table->forks[id];
